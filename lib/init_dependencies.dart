@@ -6,6 +6,7 @@ import 'package:get_it/get_it.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'core/secrets/app_screts.dart';
 import 'feature/auth/domain/repository/auth_repository.dart';
+import 'feature/auth/domain/usecases/user_login.dart';
 
 final serviceLocator = GetIt.instance;
 
@@ -19,13 +20,15 @@ Future<void> initDependencies() async {
 }
 
 void _initAuth() {
-  serviceLocator.registerFactory<AuthRemoteDataSource>(
+  serviceLocator..registerFactory<AuthRemoteDataSource>(
     () => AuthRemoteDataSourceImpl(serviceLocator()),
-  );
+  )
 
-  serviceLocator.registerFactory<AuthRepository>(() => AuthRepositoryImpl(serviceLocator()));
+  ..registerFactory<AuthRepository>(() => AuthRepositoryImpl(serviceLocator()))
 
-  serviceLocator.registerFactory(() => UserSignUp(serviceLocator()));
+  ..registerFactory(() => UserSignUp(serviceLocator()))
 
-  serviceLocator.registerLazySingleton(() => AuthBloc(userSignUp: serviceLocator()));
+  ..registerFactory(() => UserLogin(serviceLocator()))
+
+  ..registerLazySingleton(() => AuthBloc(userSignUp: serviceLocator(), userLogin: serviceLocator()));
 }

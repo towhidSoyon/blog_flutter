@@ -1,7 +1,11 @@
+import 'package:blog_app/feature/auth/presentation/auth_bloc.dart';
 import 'package:blog_app/feature/auth/presentation/pages/signup_page.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../core/common/widgets/loader.dart';
 import '../../../../core/theme/app_pallete.dart';
+import '../../../../core/utils/show_snackbar.dart';
 import '../widgets/auth_field.dart';
 import '../widgets/auth_gradient_button.dart';
 
@@ -29,7 +33,17 @@ class _SigninPageState extends State<SigninPage> {
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.all(15.0),
-        child: Form(
+        child: BlocConsumer<AuthBloc, AuthState>(
+  listener: (context, state) {
+    if( state is AuthFailure){
+      showSnackBar(context, state.message);
+    }
+  },
+  builder: (context, state) {
+    if (state is AuthLoading){
+      return const Loader();
+    }
+    return Form(
           key: formKey,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -47,7 +61,12 @@ class _SigninPageState extends State<SigninPage> {
                 isObscureText: true,
               ),
               SizedBox(height: 20),
-              AuthGradientButton(text: "Sign In", onPressed: () {}),
+              AuthGradientButton(text: "Sign In", onPressed: () {
+                if(formKey.currentState!.validate()){
+                  context.read<AuthBloc>().add(AuthLogin(email: emailController.text.trim(),
+                      password: passwordController.text.trim()));
+                }
+              }),
               SizedBox(height: 20),
               GestureDetector(
                 onTap: () {
@@ -75,7 +94,9 @@ class _SigninPageState extends State<SigninPage> {
               ),
             ],
           ),
-        ),
+        );
+  },
+),
       ),
     );
   }
