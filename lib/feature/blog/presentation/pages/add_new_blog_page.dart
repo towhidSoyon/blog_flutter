@@ -27,10 +27,10 @@ class _AddNewBlogPageState extends State<AddNewBlogPage> {
   File? image;
 
   void selectImage() async {
-    final pickedImage = await pickImage();
-    if (pickedImage != null) {
+    final pickedImageVariable = await pickImage();
+    if (pickedImageVariable != null) {
       setState(() {
-        image = pickedImage;
+        image = pickedImageVariable;
       });
     }
   }
