@@ -1,9 +1,10 @@
 import 'package:blog_app/core/error/exceptions.dart';
 import 'package:blog_app/core/error/failure.dart';
 import 'package:blog_app/feature/auth/data/datasources/auth_remote_data_source.dart';
-import 'package:blog_app/feature/auth/domain/entities/user.dart';
 import 'package:blog_app/feature/auth/domain/repository/auth_repository.dart';
-import 'package:fpdart/src/either.dart';
+import 'package:fpdart/fpdart.dart';
+
+import '../../../../core/common/entities/user.dart';
 
 class AuthRepositoryImpl implements AuthRepository {
   final AuthRemoteDataSource remoteDataSource;
@@ -54,5 +55,20 @@ class AuthRepositoryImpl implements AuthRepository {
       return left(Failure(e.message));
     }
 
+  }
+
+  Future<Either<Failure, User>> _getUser(
+      Future<User> Function() fn,
+      ) async {
+    try {
+      /*if (!await (connectionChecker.isConnected)) {
+        return left(Failure(Constants.noConnectionErrorMessage));
+      }*/
+      final user = await fn();
+
+      return right(user);
+    } on ServerException catch (e) {
+      return left(Failure(e.message));
+    }
   }
 }
