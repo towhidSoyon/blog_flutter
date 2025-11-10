@@ -5,6 +5,7 @@ import 'package:blog_app/feature/auth/domain/usecases/current_user.dart';
 import 'package:blog_app/feature/auth/domain/usecases/user_sign_up.dart';
 import 'package:blog_app/feature/auth/presentation/auth_bloc.dart';
 import 'package:blog_app/feature/blog/data/datasources/blog_remote_data_source.dart';
+import 'package:blog_app/feature/blog/domain/usecases/get_all_blogs.dart';
 import 'package:blog_app/feature/blog/domain/usecases/upload_blog.dart';
 import 'package:blog_app/feature/blog/presentation/blog_bloc.dart';
 import 'package:get_it/get_it.dart';
@@ -61,5 +62,9 @@ void _initBlog() {
       () => BlogRepositoryImpl(serviceLocator()),
     )
     ..registerFactory(() => UploadBlog(serviceLocator()))
-    ..registerLazySingleton(() => BlogBloc(serviceLocator()));
+    ..registerFactory(() => GetAllBlogs(serviceLocator()))
+    ..registerLazySingleton(
+      () =>
+          BlogBloc(uploadBlog: serviceLocator(), getAllBlog: serviceLocator()),
+    );
 }
