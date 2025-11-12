@@ -186,7 +186,7 @@ class _AddNewBlogPageState extends State<AddNewBlogPage> {
 
                     SizedBox(height: 10),
                     BlogEditor(
-                      controller: titleController,
+                      controller: contentController,
                       hintText: 'Blog Content',
                     ),
                   ],

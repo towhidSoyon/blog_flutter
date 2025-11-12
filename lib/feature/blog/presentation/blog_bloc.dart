@@ -42,7 +42,7 @@ class BlogBloc extends Bloc<BlogEvent, BlogState> {
   void _onFetchAllBlogs(BlogFetchAllBlogs event, Emitter<BlogState> emit) async{
     final res = await _getAllBlogs(NoParams());
 
-    res.fold((l) => BlogFailure(l.message),
-        (blog) => BlogSuccess(blog));
+    res.fold((l) => emit(BlogFailure(l.message)),
+        (blog) => emit(BlogSuccess(blog)));
   }
 }
